@@ -3,6 +3,7 @@ import { environment } from "./configs/environment";
 import { logger } from "./utils/default.logger";
 
 // TODO: Setup each env values and add https to localhost
+// TODO: make logger an npm package
 
 switch (environment.nodeEnv) {
   case "dev":
