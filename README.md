@@ -1,15 +1,14 @@
 # Renteefy
 
 ## Renteefy - Backend
-This project holds the code for everything that is running on the server for Renteefy.  
+
+This project holds the code for everything that is running on the server for Renteefy.
 
 ## What is Renteefy?
+
 Renteefy is a peer to peer renting platform that helps it's users to find items/services on rent around them and also allows them to list their items or service
 for rent.
 The goal of this project is to give a platform to it's users so that the renting process can be carried out in a seamless, fast and secure manner.
-
-Latest updates can be found on the projects section.
-
 
 ### Installation
 
