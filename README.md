@@ -12,7 +12,11 @@ The goal of this project is to give a platform to it's users so that the renting
 
 ### Installation
 
-Need to setup...
+After cloning the project, you can,
+`npm install`
+
+To run dev server,
+`npm run dev`
 
 ### Contributing
 
