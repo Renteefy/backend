@@ -1,5 +1,5 @@
 import * as dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 export const environment = {
   nodeEnv: process.env.ENV || process.env.NODE_ENV,
   logDir: process.env.LOG_DIR || "logs",

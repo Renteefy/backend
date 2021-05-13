@@ -2,7 +2,7 @@ import { server } from "./server";
 import { environment } from "./configs/environment";
 import { logger } from "./utils/default.logger";
 
-// TODO: Setup each env values and add https to localhost
+// TODO: add https to localhost
 
 switch (environment.nodeEnv) {
   case "dev":
@@ -20,7 +20,9 @@ switch (environment.nodeEnv) {
       logger.info("Server Online -- prod");
     });
     break;
+  case "test":
+    server.listen(5000);
+    break;
   default:
     logger.info("Env not defined");
-    break;
 }

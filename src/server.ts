@@ -3,7 +3,7 @@ import morgan from "morgan";
 import path from "path";
 import { createStream } from "rotating-file-stream";
 // local imports
-import { userRouter } from "./core/users/users.router";
+import { userRouter } from "./core/user/user.router";
 import { connectMongo } from "./utils/mongodbConnection";
 
 const app: express.Application = express();
@@ -21,7 +21,7 @@ app.use(morgan("combined", { stream: accessLogStream }));
 app.use(morgan("tiny"));
 
 // routers
-app.use("/users", userRouter);
+app.use("/user", userRouter);
 
 // health check
 app.get("/", (req: express.Request, res: express.Response) =>

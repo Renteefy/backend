@@ -22,8 +22,7 @@ const mongo = {
   options: MONGO_OPTIONS,
   url: `mongodb://${MONGO_USERNAME}:${MONGO_PASSWORD}@${MONGO_HOST}`,
 };
-
-export const connectMongo = () => {
+const connectMongo = () => {
   // decorations
   const spinner = new Spinner("Connecting to Mongodb... %s");
   spinner.setSpinnerString("|/-\\");
@@ -41,3 +40,8 @@ export const connectMongo = () => {
       logger.error(err);
     });
 };
+const disconnectMongo = async () => {
+  await mongoose.connection.close();
+};
+
+export { connectMongo, disconnectMongo };
