@@ -1,7 +1,7 @@
 import { Request, Response, urlencoded } from "express";
 import userModel from "./user.model";
 import { logger } from "../../utils/default.logger";
-import { listUsers } from "./user.service";
+import { listUsers, createUser, findUserInfo, updateUserInfo } from "./user.service";
 import { nanoid } from "nanoid";
 import IUser from "./user.interface";
 import JWT from "../../utils/jwt";
@@ -17,18 +17,18 @@ const checkUser = async (req: Request, res: Response) => {
 	try {
 		const email = req.body.email;
 		if (email === null || email === undefined || email.length === 0) {
-			return res.status(400).json({ message: "Auth Failed", deleteLater: "Email is literally empty" });
+			return res.status(400).json({ message: "Auth Failed 😕", deleteLater: "Email is literally empty" });
 		}
 		const users = await listUsers({ User: userModel, param: { email: email } });
 
 		if (users === null || users.length === 0) {
-			return res.status(200).json({ message: "All good", deleteLater: "Given email does not exist in the database" });
+			return res.status(200).json({ message: "All good 😁", deleteLater: "Given email does not exist in the database" });
 		} else {
-			return res.status(400).json({ message: "Auth Failed", deleteLater: "Given email exists in the database" });
+			return res.status(400).json({ message: "Auth Failed 😕", deleteLater: "Given email exists in the database" });
 		}
 	} catch (err) {
 		logger.error(err);
-		return res.status(500).json({ message: "Something went wrong", error: err });
+		return res.status(500).json({ message: "Something went wrong 👀", error: err });
 	}
 };
 
@@ -37,22 +37,21 @@ const storeLoginDetails = async (req: Request, res: Response) => {
 	try {
 		for (var i of ["firstName", "lastName", "email", "username"]) {
 			if (req.body[i] === null || req.body[i] === undefined || req.body[i].length === 0) {
-				return res.status(400).json({ message: "Failure", deleteLater: i + " - this field is missing in the request body" });
+				return res.status(400).json({ message: "Failure 😕", deleteLater: i + " - this field is missing in the request body" });
 			}
 		}
 		const userID = nanoid();
 		const token = JWT.signJWT(userID);
-		const user: IUser = await userModel.create({
-			userID: userID,
-			firstName: req.body.firstName,
-			lastName: req.body.lastName,
-			username: req.body.username,
-			email: req.body.email,
-		});
-		return res.status(200).json({ message: "Stored Successfully", token: token });
+		req.body.userID = userID;
+		const isUserCreated = await createUser({ User: userModel, reqBody: req.body });
+		if (isUserCreated) {
+			return res.status(200).json({ message: "Stored Successfully 😁", token: token });
+		} else {
+			return res.status(500).json({ message: "Something went wrong 😕" });
+		}
 	} catch (err) {
 		logger.error(err);
-		return res.status(500).json({ message: "Something went wrong", error: err });
+		return res.status(500).json({ message: "Something went wrong 😕", error: err });
 	}
 };
 
@@ -61,50 +60,50 @@ const userLogin = async (req: Request, res: Response) => {
 	try {
 		const email = req.body.email;
 		if (email === null || email === undefined || email.length === 0) {
-			return res.status(400).json({ message: "Auth Failed", deleteLater: "Email is literally empty" });
+			return res.status(400).json({ message: "Auth Failed 😕", deleteLater: "Email is literally empty" });
 		}
 
 		const users = await listUsers({ User: userModel, param: { email: email } });
 		if (users !== null || users.length !== 0) {
 			const token = JWT.signJWT(users[0]["userID"]);
-			return res.status(200).json({ message: "All good", deleteLater: "User logged in", token: token });
+			return res.status(200).json({ message: "All good 😁", deleteLater: "User logged in", token: token });
 		} else {
-			return res.status(400).json({ message: "Auth Failed", deleteLater: "Given email does not exist in the database" });
+			return res.status(400).json({ message: "Auth Failed 😕", deleteLater: "Given email does not exist in the database" });
 		}
 	} catch (err) {
 		logger.error(err);
-		return res.status(500).json({ message: "Something went wrong", error: err });
+		return res.status(500).json({ message: "Something went wrong 😕", error: err });
 	}
 };
 
 const getUserInfo = async (req: Request, res: Response) => {
 	try {
 		const userID = res.locals.jwtPayload["userID"];
-		const userInfo = await userModel.findOne({ userID: userID }).select("email username firstName lastName renterStars renteeStars isRenter isRentee").exec();
-		if (userInfo !== null) {
-			return res.status(200).json({ message: "Success", userInfo: userInfo });
+
+		const userInfo = await findUserInfo({ User: userModel, userID: userID });
+		if (userInfo) {
+			return res.status(200).json({ message: "Success 😁", userInfo: userInfo });
 		} else {
-			return res.status(400).json({ message: "Failure", deleteLater: "Something went wrong bro, idk" });
+			return res.status(400).json({ message: "Failure 😕", deleteLater: "Something went wrong bro, idk" });
 		}
 	} catch (err) {
 		logger.error(err);
-		return res.status(500).json({ message: "Something went wrong", error: err });
+		return res.status(500).json({ message: "Something went wrong 😕", error: err });
 	}
 };
 
 const patchUserInfo = async (req: Request, res: Response) => {
 	try {
 		const userID = res.locals.jwtPayload["userID"];
-		const update = await userModel.updateOne({ userID: userID }, { $set: req.body.updates });
-		console.log(update);
-		if (update) {
-			return res.status(200).json({ message: "User info updated sucessfully" });
+		const isUpdated = await updateUserInfo({ User: userModel, userID: userID, updates: req.body.updates });
+		if (isUpdated) {
+			return res.status(200).json({ message: "User info updated sucessfully 😁" });
 		} else {
-			return res.status(400).json({ message: "Failure", deleteLater: "Something went wrong bro, idk" });
+			return res.status(400).json({ message: "Failure 😕", deleteLater: "Something went wrong bro, idk" });
 		}
 	} catch (err) {
 		logger.error(err);
-		return res.status(500).json({ message: "Something went wrong", error: err });
+		return res.status(500).json({ message: "Something went wrong 😕", error: err });
 	}
 };
 

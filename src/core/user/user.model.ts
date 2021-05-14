@@ -4,7 +4,7 @@ import IUser from "./user.interface";
 const UserSchema: Schema = new Schema(
 	{
 		userID: { type: String, required: true, unique: true }, // will stay the same
-		email: String,
+		email: { type: String, required: true, unique: true },
 		username: { type: String, required: true, unique: true }, //can change
 		firstName: String,
 		lastName: String,
