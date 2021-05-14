@@ -1,5 +1,5 @@
-const listUsers = async (User: any) => {
-  return await User.find({});
+const listUsers = async ({ User, param = null }: { User: any; param?: any }) => {
+	return await User.find(param);
 };
 
 export { listUsers };
