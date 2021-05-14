@@ -9,6 +9,7 @@ const MONGO_OPTIONS = {
   useNewUrlParser: true,
   keepAlive: true,
   authSource: "admin",
+  useCreateIndex: true,
 };
 
 const MONGO_HOST = `${environment.mongoHost}/${environment.mongodbName}`;
