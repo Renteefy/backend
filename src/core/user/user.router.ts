@@ -1,6 +1,12 @@
 import { Router } from "express";
-import { checkUser, getAllUsers, storeLoginDetails, getUserInfo, userLogin, patchUserInfo } from "./user.controller";
-//import JWT from "../../utils/jwt";
+import {
+  checkUser,
+  getAllUsers,
+  storeLoginDetails,
+  getUserInfo,
+  userLogin,
+  patchUserInfo,
+} from "./user.controller";
 import JWT from "../../utils/jwt";
 
 export const userRouter = Router();
