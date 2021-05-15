@@ -3,7 +3,7 @@ import morgan from "morgan";
 import path from "path";
 import { createStream } from "rotating-file-stream";
 // local imports
-import { userRouter } from "./core/user/user.router";
+import { userRouter } from "./core/users/router";
 import { connectMongo } from "./utils/mongodbConnection";
 
 const app: express.Application = express();
@@ -14,8 +14,8 @@ connectMongo();
 
 // logging incoming request
 let accessLogStream = createStream("request.log", {
-  interval: "1d",
-  path: path.join("./logs"),
+	interval: "1d",
+	path: path.join("./logs"),
 });
 app.use(morgan("combined", { stream: accessLogStream }));
 app.use(morgan("tiny"));
@@ -24,12 +24,10 @@ app.use(morgan("tiny"));
 app.use("/user", userRouter);
 
 // health check
-app.get("/", (req: express.Request, res: express.Response) =>
-  res.send("⚡Renteefy server online 🟢")
-);
+app.get("/", (req: express.Request, res: express.Response) => res.send("⚡Renteefy server online 🟢"));
 
 app.use((req, res, next) => {
-  res.status(404).json("Route Unavailable 😕");
+	res.status(404).json("Route Unavailable 😕");
 });
 
 export const server = app;

@@ -1,9 +1,9 @@
 import { Request, Response, urlencoded } from "express";
-import userModel from "./user.model";
+import userModel from "./model";
 import { logger } from "../../utils/default.logger";
-import { listUsers, createUser, findUserInfo, updateUserInfo } from "./user.service";
+import { listUsers, createUser, findUserInfo, updateUserInfo } from "./service";
 import { nanoid } from "nanoid";
-import IUser from "./user.interface";
+import IUser from "./interface";
 import JWT from "../../utils/jwt";
 
 // This needs to be deleted
