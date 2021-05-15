@@ -29,26 +29,20 @@ const checkUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const email = req.body.email;
         if (email === null || email === undefined || email.length === 0) {
-            return res
-                .status(400)
-                .json({
+            return res.status(401).json({
                 message: "Auth Failed 😕",
                 deleteLater: "Email is literally empty",
             });
         }
         const users = yield user_service_1.listUsers({ User: user_model_1.default, param: { email: email } });
         if (users === null || users.length === 0) {
-            return res
-                .status(200)
-                .json({
+            return res.status(200).json({
                 message: "All good 😁",
                 deleteLater: "Given email does not exist in the database",
             });
         }
         else {
-            return res
-                .status(400)
-                .json({
+            return res.status(400).json({
                 message: "Auth Failed 😕",
                 deleteLater: "Given email exists in the database",
             });
@@ -56,9 +50,7 @@ const checkUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (err) {
         default_logger_1.logger.error(err);
-        return res
-            .status(500)
-            .json({ message: "Something went wrong 👀", error: err });
+        return res.status(500).json({ message: "Something went wrong 👀", error: err });
     }
 });
 exports.checkUser = checkUser;
@@ -66,12 +58,8 @@ exports.checkUser = checkUser;
 const storeLoginDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         for (var i of ["firstName", "lastName", "email", "username"]) {
-            if (req.body[i] === null ||
-                req.body[i] === undefined ||
-                req.body[i].length === 0) {
-                return res
-                    .status(400)
-                    .json({
+            if (req.body[i] === null || req.body[i] === undefined || req.body[i].length === 0) {
+                return res.status(400).json({
                     message: "Failure 😕",
                     deleteLater: i + " - this field is missing in the request body",
                 });
@@ -85,9 +73,7 @@ const storeLoginDetails = (req, res) => __awaiter(void 0, void 0, void 0, functi
             reqBody: req.body,
         });
         if (isUserCreated) {
-            return res
-                .status(200)
-                .json({ message: "Stored Successfully 😁", token: token });
+            return res.status(200).json({ message: "Stored Successfully 😁", token: token });
         }
         else {
             return res.status(500).json({ message: "Something went wrong 😕" });
@@ -95,9 +81,7 @@ const storeLoginDetails = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
     catch (err) {
         default_logger_1.logger.error(err);
-        return res
-            .status(500)
-            .json({ message: "Something went wrong 😕", error: err });
+        return res.status(500).json({ message: "Something went wrong 😕", error: err });
     }
 });
 exports.storeLoginDetails = storeLoginDetails;
@@ -106,28 +90,22 @@ const userLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const email = req.body.email;
         if (email === null || email === undefined || email.length === 0) {
-            return res
-                .status(400)
-                .json({
+            return res.status(401).json({
                 message: "Auth Failed 😕",
                 deleteLater: "Email is literally empty",
             });
         }
         const users = yield user_service_1.listUsers({ User: user_model_1.default, param: { email: email } });
-        if (users !== null || users.length !== 0) {
+        if (users !== undefined && users !== null && users.length !== 0) {
             const token = jwt_1.default.signJWT(users[0]["userID"]);
-            return res
-                .status(200)
-                .json({
+            return res.status(200).json({
                 message: "All good 😁",
                 deleteLater: "User logged in",
                 token: token,
             });
         }
         else {
-            return res
-                .status(400)
-                .json({
+            return res.status(400).json({
                 message: "Auth Failed 😕",
                 deleteLater: "Given email does not exist in the database",
             });
@@ -135,9 +113,7 @@ const userLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     catch (err) {
         default_logger_1.logger.error(err);
-        return res
-            .status(500)
-            .json({ message: "Something went wrong 😕", error: err });
+        return res.status(500).json({ message: "Something went wrong 😕", error: err });
     }
 });
 exports.userLogin = userLogin;
@@ -147,14 +123,10 @@ const getUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const userID = res.locals.jwtPayload["userID"];
         const userInfo = yield user_service_1.findUserInfo({ User: user_model_1.default, userID: userID });
         if (userInfo) {
-            return res
-                .status(200)
-                .json({ message: "Success 😁", userInfo: userInfo });
+            return res.status(200).json({ message: "Success 😁", userInfo: userInfo });
         }
         else {
-            return res
-                .status(400)
-                .json({
+            return res.status(400).json({
                 message: "Failure 😕",
                 deleteLater: "Something went wrong bro, idk",
             });
@@ -162,9 +134,7 @@ const getUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
     catch (err) {
         default_logger_1.logger.error(err);
-        return res
-            .status(500)
-            .json({ message: "Something went wrong 😕", error: err });
+        return res.status(500).json({ message: "Something went wrong 😕", error: err });
     }
 });
 exports.getUserInfo = getUserInfo;
@@ -177,14 +147,10 @@ const patchUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             updates: req.body.updates,
         });
         if (isUpdated) {
-            return res
-                .status(200)
-                .json({ message: "User info updated sucessfully 😁" });
+            return res.status(200).json({ message: "User info updated sucessfully 😁" });
         }
         else {
-            return res
-                .status(400)
-                .json({
+            return res.status(400).json({
                 message: "Failure 😕",
                 deleteLater: "Something went wrong bro, idk",
             });
@@ -192,9 +158,7 @@ const patchUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
     catch (err) {
         default_logger_1.logger.error(err);
-        return res
-            .status(500)
-            .json({ message: "Something went wrong 😕", error: err });
+        return res.status(500).json({ message: "Something went wrong 😕", error: err });
     }
 });
 exports.patchUserInfo = patchUserInfo;
