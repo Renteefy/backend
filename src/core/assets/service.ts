@@ -1,8 +1,9 @@
 import { any } from "sequelize/types/lib/operators";
 import { logger } from "../../utils/default.logger";
+import { findUserInfo } from "../users/service";
 
 const listAssets = async ({ Asset, param = null }: { Asset: any; param?: any }) => {
-	return await Asset.findAll();
+	return await Asset.findAll({ where: param });
 };
 
 const insertAsset = async ({ Asset, reqBody }: { Asset: any; reqBody: any }) => {
@@ -22,13 +23,16 @@ const insertAsset = async ({ Asset, reqBody }: { Asset: any; reqBody: any }) => 
 	}
 };
 
-const fetchAsset = async ({ Asset, assetID }: { Asset: any; assetID: String }) => {
+const fetchAsset = async ({ Asset, assetID, User }: { Asset: any; assetID: String; User: any }) => {
 	// add code to return user info also
 	const asset = await Asset.findOne({ assetID: assetID });
 	if (asset) {
-		return asset;
+		const userID = asset["owner"];
+		const userInfo = await findUserInfo({ User: User, userID: userID });
+		const user = { id: userID, name: userInfo["username"], renteeStars: userInfo["renteeStars"], renterStars: userInfo["renterStars"] };
+		return { asset: asset, user: user };
 	} else {
-		return false;
+		return { asset: false, user: false };
 	}
 };
 

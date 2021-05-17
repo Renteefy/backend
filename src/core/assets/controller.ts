@@ -1,5 +1,6 @@
 import { Request, Response, urlencoded } from "express";
 import assetModel from "./model";
+import userModel from "../users/model";
 import { listAssets, insertAsset, fetchAsset, filteredFetch } from "./service";
 import { logger } from "../../utils/default.logger";
 import { nanoid } from "nanoid";
@@ -35,10 +36,10 @@ const addAsset = async (req: Request, res: Response) => {
 const getAsset = async (req: Request, res: Response) => {
 	try {
 		const assetID = req.params.assetID;
-		const asset = await fetchAsset({ Asset: assetModel, assetID: assetID });
+		const { asset, user } = await fetchAsset({ Asset: assetModel, assetID: assetID, User: userModel });
 
 		if (asset) {
-			return res.status(200).json({ message: "This is the asset", asset: asset });
+			return res.status(200).json({ message: "This is the asset and the owner", asset: asset, owner: user });
 		} else {
 			return res.status(400).json({ message: "Unable to find asset" });
 		}

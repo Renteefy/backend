@@ -12,12 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.patchUserInfo = exports.userLogin = exports.getUserInfo = exports.storeLoginDetails = exports.checkUser = exports.getAllUsers = void 0;
+exports.getDashboardInfo = exports.patchUserInfo = exports.userLogin = exports.getUserInfo = exports.storeLoginDetails = exports.checkUser = exports.getAllUsers = void 0;
 const model_1 = __importDefault(require("./model"));
+const model_2 = __importDefault(require("../assets/model"));
 const default_logger_1 = require("../../utils/default.logger");
 const service_1 = require("./service");
 const nanoid_1 = require("nanoid");
 const jwt_1 = __importDefault(require("../../utils/jwt"));
+const service_2 = require("../assets/service");
 // This needs to be deleted
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield service_1.listUsers({ User: model_1.default });
@@ -163,5 +165,23 @@ const patchUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.patchUserInfo = patchUserInfo;
 const getDashboardInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // this needs to be written after the assets/services db is ready
+    try {
+        const userID = res.locals.jwtPayload["userID"];
+        const assets = yield service_2.listAssets({ Asset: model_2.default, param: { owner: userID } });
+        // add services here once the model is done
+        if (assets) {
+            return res.status(200).json({ ownedAsset: assets, rentedAsset: [], requestedAssets: [] });
+        }
+        else {
+            return res.status(400).json({
+                message: "Failure 😕",
+                deleteLater: "Something went wrong bro, idk",
+            });
+        }
+    }
+    catch (err) {
+        default_logger_1.logger.error(err);
+        return res.status(500).json({ message: "Something went wrong 😕", error: err });
+    }
 });
+exports.getDashboardInfo = getDashboardInfo;

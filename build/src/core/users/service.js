@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateUserInfo = exports.findUserInfo = exports.createUser = exports.listUsers = void 0;
 const default_logger_1 = require("../../utils/default.logger");
-const listUsers = ({ User, param = null, }) => __awaiter(void 0, void 0, void 0, function* () {
+const listUsers = ({ User, param = null }) => __awaiter(void 0, void 0, void 0, function* () {
     return yield User.find(param);
 });
 exports.listUsers = listUsers;
@@ -38,12 +38,10 @@ const createUser = ({ User, reqBody }) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.createUser = createUser;
-const findUserInfo = ({ User, userID, }) => __awaiter(void 0, void 0, void 0, function* () {
+const findUserInfo = ({ User, userID }) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         default_logger_1.logger.info(userID);
-        const userInfo = yield User.findOne({ userID: userID })
-            .select("email username firstName lastName renterStars renteeStars isRenter isRentee")
-            .exec();
+        const userInfo = yield User.findOne({ userID: userID }).select("email username firstName lastName renterStars renteeStars isRenter isRentee").exec();
         if (userInfo === undefined || userInfo === null) {
             return false;
         }
@@ -55,7 +53,7 @@ const findUserInfo = ({ User, userID, }) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.findUserInfo = findUserInfo;
-const updateUserInfo = ({ User, userID, updates, }) => __awaiter(void 0, void 0, void 0, function* () {
+const updateUserInfo = ({ User, userID, updates }) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const update = yield User.updateOne({ userID: userID }, { $set: updates });
         if (update === undefined || update === null) {

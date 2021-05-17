@@ -13,4 +13,5 @@ exports.userRouter.post("/checkUser", controller_1.checkUser);
 exports.userRouter.post("/storeLoginDetails", controller_1.storeLoginDetails);
 exports.userRouter.post("/userLogin", controller_1.userLogin);
 exports.userRouter.get("/getUserInfo", jwt_1.default.checkJWT, controller_1.getUserInfo);
+exports.userRouter.get("/getDashboardInfo", jwt_1.default.checkJWT, controller_1.getDashboardInfo);
 exports.userRouter.patch("/patchUserInfo", jwt_1.default.checkJWT, controller_1.patchUserInfo);

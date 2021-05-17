@@ -10,8 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.filteredFetch = exports.fetchAsset = exports.insertAsset = exports.listAssets = void 0;
+const service_1 = require("../users/service");
 const listAssets = ({ Asset, param = null }) => __awaiter(void 0, void 0, void 0, function* () {
-    return yield Asset.findAll();
+    return yield Asset.findAll({ where: param });
 });
 exports.listAssets = listAssets;
 const insertAsset = ({ Asset, reqBody }) => __awaiter(void 0, void 0, void 0, function* () {
@@ -32,14 +33,17 @@ const insertAsset = ({ Asset, reqBody }) => __awaiter(void 0, void 0, void 0, fu
     }
 });
 exports.insertAsset = insertAsset;
-const fetchAsset = ({ Asset, assetID }) => __awaiter(void 0, void 0, void 0, function* () {
+const fetchAsset = ({ Asset, assetID, User }) => __awaiter(void 0, void 0, void 0, function* () {
     // add code to return user info also
     const asset = yield Asset.findOne({ assetID: assetID });
     if (asset) {
-        return asset;
+        const userID = asset["owner"];
+        const userInfo = yield service_1.findUserInfo({ User: User, userID: userID });
+        const user = { id: userID, name: userInfo["username"], renteeStars: userInfo["renteeStars"], renterStars: userInfo["renterStars"] };
+        return { asset: asset, user: user };
     }
     else {
-        return false;
+        return { asset: false, user: false };
     }
 });
 exports.fetchAsset = fetchAsset;

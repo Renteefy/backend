@@ -1,10 +1,12 @@
 import { Request, Response, urlencoded } from "express";
 import userModel from "./model";
+import assetModel from "../assets/model";
 import { logger } from "../../utils/default.logger";
 import { listUsers, createUser, findUserInfo, updateUserInfo } from "./service";
 import { nanoid } from "nanoid";
 import IUser from "./interface";
 import JWT from "../../utils/jwt";
+import { listAssets } from "../assets/service";
 
 // This needs to be deleted
 const getAllUsers = async (req: Request, res: Response) => {
@@ -143,6 +145,21 @@ const patchUserInfo = async (req: Request, res: Response) => {
 };
 
 const getDashboardInfo = async (req: Request, res: Response) => {
-	// this needs to be written after the assets/services db is ready
+	try {
+		const userID = res.locals.jwtPayload["userID"];
+		const assets = await listAssets({ Asset: assetModel, param: { owner: userID } });
+		// add services here once the model is done
+		if (assets) {
+			return res.status(200).json({ ownedAsset: assets, rentedAsset: [], requestedAssets: [] });
+		} else {
+			return res.status(400).json({
+				message: "Failure 😕",
+				deleteLater: "Something went wrong bro, idk",
+			});
+		}
+	} catch (err) {
+		logger.error(err);
+		return res.status(500).json({ message: "Something went wrong 😕", error: err });
+	}
 };
-export { getAllUsers, checkUser, storeLoginDetails, getUserInfo, userLogin, patchUserInfo };
+export { getAllUsers, checkUser, storeLoginDetails, getUserInfo, userLogin, patchUserInfo, getDashboardInfo };

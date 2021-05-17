@@ -14,6 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSome = exports.getAsset = exports.addAsset = exports.getAllAssets = void 0;
 const model_1 = __importDefault(require("./model"));
+const model_2 = __importDefault(require("../users/model"));
 const service_1 = require("./service");
 const default_logger_1 = require("../../utils/default.logger");
 const nanoid_1 = require("nanoid");
@@ -49,9 +50,9 @@ exports.addAsset = addAsset;
 const getAsset = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const assetID = req.params.assetID;
-        const asset = yield service_1.fetchAsset({ Asset: model_1.default, assetID: assetID });
+        const { asset, user } = yield service_1.fetchAsset({ Asset: model_1.default, assetID: assetID, User: model_2.default });
         if (asset) {
-            return res.status(200).json({ message: "This is the asset", asset: asset });
+            return res.status(200).json({ message: "This is the asset and the owner", asset: asset, owner: user });
         }
         else {
             return res.status(400).json({ message: "Unable to find asset" });
