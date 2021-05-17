@@ -34,4 +34,8 @@ exports.environment = {
     mongoHost: process.env.MONGO_HOST || "localhost:27017",
     jwtSecret: process.env.JWT_SECRET || "verysecret",
     jwtExpiry: process.env.JWT_EXPIRY || "24d",
+    mysqldbName: process.env.MYSQL_DB_NAME || "test",
+    mysqlUsername: process.env.MYSQL_USERNAME || "bossman",
+    mysqlPassword: process.env.MYSQL_PASSWORD || "bossmanhehe",
+    mysqlHost: process.env.MYSQL_HOST || "localhost:3306",
 };

@@ -4,6 +4,7 @@ import path from "path";
 import { createStream } from "rotating-file-stream";
 // local imports
 import { userRouter } from "./core/users/router";
+import { assetRouter } from "./core/assets/router";
 import { connectMongo } from "./utils/mongodbConnection";
 
 const app: express.Application = express();
@@ -22,6 +23,7 @@ app.use(morgan("tiny"));
 
 // routers
 app.use("/user", userRouter);
+app.use("/assets", assetRouter);
 
 // health check
 app.get("/", (req: express.Request, res: express.Response) => res.send("⚡Renteefy server online 🟢"));
