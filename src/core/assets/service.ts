@@ -1,12 +1,12 @@
 import { any } from "sequelize/types/lib/operators";
 import { logger } from "../../utils/default.logger";
-import { findUserInfo } from "../users/service";
+import { getUserInfo_service } from "../users/service";
 
-const listAssets = async ({ Asset, param = null }: { Asset: any; param?: any }) => {
+const listAssets_service = async ({ Asset, param = null }: { Asset: any; param?: any }) => {
 	return await Asset.findAll({ where: param });
 };
 
-const insertAsset = async ({ Asset, reqBody }: { Asset: any; reqBody: any }) => {
+const addAsset_service = async ({ Asset, reqBody }: { Asset: any; reqBody: any }) => {
 	const new_asset = await Asset.create({
 		assetID: reqBody.assetID,
 		title: reqBody.title,
@@ -23,12 +23,12 @@ const insertAsset = async ({ Asset, reqBody }: { Asset: any; reqBody: any }) => 
 	}
 };
 
-const fetchAsset = async ({ Asset, assetID, User }: { Asset: any; assetID: String; User: any }) => {
+const getAsset_service = async ({ Asset, assetID, User }: { Asset: any; assetID: String; User: any }) => {
 	// add code to return user info also
 	const asset = await Asset.findOne({ assetID: assetID });
 	if (asset) {
 		const userID = asset["owner"];
-		const userInfo = await findUserInfo({ User: User, userID: userID });
+		const userInfo = await getUserInfo_service({ User: User, userID: userID });
 		const user = { id: userID, name: userInfo["username"], renteeStars: userInfo["renteeStars"], renterStars: userInfo["renterStars"] };
 		return { asset: asset, user: user };
 	} else {
@@ -36,7 +36,7 @@ const fetchAsset = async ({ Asset, assetID, User }: { Asset: any; assetID: Strin
 	}
 };
 
-const filteredFetch = async ({ Asset, arr, Op }: { Asset: any; arr: Array<String>; Op: any }) => {
+const getSome_service = async ({ Asset, arr, Op }: { Asset: any; arr: Array<String>; Op: any }) => {
 	const assets = await Asset.findAll({ where: { assetID: { [Op.notIn]: arr } } });
 	if (assets) {
 		return assets;
@@ -45,4 +45,23 @@ const filteredFetch = async ({ Asset, arr, Op }: { Asset: any; arr: Array<String
 	}
 };
 
-export { listAssets, insertAsset, fetchAsset, filteredFetch };
+const updateAsset_service = async ({ Asset, changes, assetID }: { Asset: any; changes: any; assetID: any }) => {
+	const assets = await Asset.update(changes, { where: { assetID: assetID } });
+	if (assets[0]) {
+		return assets;
+	} else {
+		return false;
+	}
+};
+
+const deleteAsset_service = async ({ Asset, assetID }: { Asset: any; assetID: String }) => {
+	const asset = await Asset.destroy({ where: { assetID: assetID } });
+	console.log(asset);
+	if (asset) {
+		return true;
+	} else {
+		return false;
+	}
+};
+
+export { listAssets_service, addAsset_service, getAsset_service, getSome_service, updateAsset_service, deleteAsset_service };

@@ -22,7 +22,7 @@ const jwt_1 = __importDefault(require("../../utils/jwt"));
 const service_2 = require("../assets/service");
 // This needs to be deleted
 const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const users = yield service_1.listUsers({ User: model_1.default });
+    const users = yield service_1.getAllUsers_service({ User: model_1.default });
     res.send(users);
 });
 exports.getAllUsers = getAllUsers;
@@ -36,7 +36,7 @@ const checkUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 deleteLater: "Email is literally empty",
             });
         }
-        const users = yield service_1.listUsers({ User: model_1.default, param: { email: email } });
+        const users = yield service_1.getAllUsers_service({ User: model_1.default, param: { email: email } });
         if (users === null || users.length === 0) {
             return res.status(200).json({
                 message: "All good 😁",
@@ -70,7 +70,7 @@ const storeLoginDetails = (req, res) => __awaiter(void 0, void 0, void 0, functi
         const userID = nanoid_1.nanoid();
         const token = jwt_1.default.signJWT(userID);
         req.body.userID = userID;
-        const isUserCreated = yield service_1.createUser({
+        const isUserCreated = yield service_1.storeLoginDetails_service({
             User: model_1.default,
             reqBody: req.body,
         });
@@ -97,7 +97,7 @@ const userLogin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 deleteLater: "Email is literally empty",
             });
         }
-        const users = yield service_1.listUsers({ User: model_1.default, param: { email: email } });
+        const users = yield service_1.getAllUsers_service({ User: model_1.default, param: { email: email } });
         if (users !== undefined && users !== null && users.length !== 0) {
             const token = jwt_1.default.signJWT(users[0]["userID"]);
             return res.status(200).json({
@@ -123,7 +123,7 @@ exports.userLogin = userLogin;
 const getUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userID = res.locals.jwtPayload["userID"];
-        const userInfo = yield service_1.findUserInfo({ User: model_1.default, userID: userID });
+        const userInfo = yield service_1.getUserInfo_service({ User: model_1.default, userID: userID });
         if (userInfo) {
             return res.status(200).json({ message: "Success 😁", userInfo: userInfo });
         }
@@ -143,7 +143,7 @@ exports.getUserInfo = getUserInfo;
 const patchUserInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userID = res.locals.jwtPayload["userID"];
-        const isUpdated = yield service_1.updateUserInfo({
+        const isUpdated = yield service_1.patchUserInfo_service({
             User: model_1.default,
             userID: userID,
             updates: req.body.updates,
@@ -167,7 +167,7 @@ exports.patchUserInfo = patchUserInfo;
 const getDashboardInfo = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userID = res.locals.jwtPayload["userID"];
-        const assets = yield service_2.listAssets({ Asset: model_2.default, param: { owner: userID } });
+        const assets = yield service_2.listAssets_service({ Asset: model_2.default, param: { owner: userID } });
         // add services here once the model is done
         if (assets) {
             return res.status(200).json({ ownedAsset: assets, rentedAsset: [], requestedAssets: [] });

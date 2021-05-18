@@ -1,10 +1,10 @@
 import { logger } from "../../utils/default.logger";
 
-const listUsers = async ({ User, param = null }: { User: any; param?: any }) => {
+const getAllUsers_service = async ({ User, param = null }: { User: any; param?: any }) => {
 	return await User.find(param);
 };
 
-const createUser = async ({ User, reqBody }: { User: any; reqBody: any }) => {
+const storeLoginDetails_service = async ({ User, reqBody }: { User: any; reqBody: any }) => {
 	try {
 		const user: any = await User.create({
 			userID: reqBody.userID,
@@ -25,7 +25,7 @@ const createUser = async ({ User, reqBody }: { User: any; reqBody: any }) => {
 	}
 };
 
-const findUserInfo = async ({ User, userID }: { User: any; userID: String }) => {
+const getUserInfo_service = async ({ User, userID }: { User: any; userID: String }) => {
 	try {
 		logger.info(userID);
 		const userInfo = await User.findOne({ userID: userID }).select("email username firstName lastName renterStars renteeStars isRenter isRentee").exec();
@@ -39,7 +39,7 @@ const findUserInfo = async ({ User, userID }: { User: any; userID: String }) => 
 	}
 };
 
-const updateUserInfo = async ({ User, userID, updates }: { User: any; userID: String; updates: any }) => {
+const patchUserInfo_service = async ({ User, userID, updates }: { User: any; userID: String; updates: any }) => {
 	try {
 		const update = await User.updateOne({ userID: userID }, { $set: updates });
 		if (update === undefined || update === null) {
@@ -52,4 +52,4 @@ const updateUserInfo = async ({ User, userID, updates }: { User: any; userID: St
 	}
 };
 
-export { listUsers, createUser, findUserInfo, updateUserInfo };
+export { getAllUsers_service, storeLoginDetails_service, getUserInfo_service, patchUserInfo_service };

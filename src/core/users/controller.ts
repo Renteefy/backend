@@ -2,15 +2,15 @@ import { Request, Response, urlencoded } from "express";
 import userModel from "./model";
 import assetModel from "../assets/model";
 import { logger } from "../../utils/default.logger";
-import { listUsers, createUser, findUserInfo, updateUserInfo } from "./service";
+import { getAllUsers_service, storeLoginDetails_service, getUserInfo_service, patchUserInfo_service } from "./service";
 import { nanoid } from "nanoid";
 import IUser from "./interface";
 import JWT from "../../utils/jwt";
-import { listAssets } from "../assets/service";
+import { listAssets_service } from "../assets/service";
 
 // This needs to be deleted
 const getAllUsers = async (req: Request, res: Response) => {
-	const users = await listUsers({ User: userModel });
+	const users = await getAllUsers_service({ User: userModel });
 	res.send(users);
 };
 
@@ -24,7 +24,7 @@ const checkUser = async (req: Request, res: Response) => {
 				deleteLater: "Email is literally empty",
 			});
 		}
-		const users = await listUsers({ User: userModel, param: { email: email } });
+		const users = await getAllUsers_service({ User: userModel, param: { email: email } });
 
 		if (users === null || users.length === 0) {
 			return res.status(200).json({
@@ -57,7 +57,7 @@ const storeLoginDetails = async (req: Request, res: Response) => {
 		const userID = nanoid();
 		const token = JWT.signJWT(userID);
 		req.body.userID = userID;
-		const isUserCreated = await createUser({
+		const isUserCreated = await storeLoginDetails_service({
 			User: userModel,
 			reqBody: req.body,
 		});
@@ -83,7 +83,7 @@ const userLogin = async (req: Request, res: Response) => {
 			});
 		}
 
-		const users = await listUsers({ User: userModel, param: { email: email } });
+		const users = await getAllUsers_service({ User: userModel, param: { email: email } });
 		if (users !== undefined && users !== null && users.length !== 0) {
 			const token = JWT.signJWT(users[0]["userID"]);
 			return res.status(200).json({
@@ -107,7 +107,7 @@ const userLogin = async (req: Request, res: Response) => {
 const getUserInfo = async (req: Request, res: Response) => {
 	try {
 		const userID = res.locals.jwtPayload["userID"];
-		const userInfo = await findUserInfo({ User: userModel, userID: userID });
+		const userInfo = await getUserInfo_service({ User: userModel, userID: userID });
 		if (userInfo) {
 			return res.status(200).json({ message: "Success 😁", userInfo: userInfo });
 		} else {
@@ -125,7 +125,7 @@ const getUserInfo = async (req: Request, res: Response) => {
 const patchUserInfo = async (req: Request, res: Response) => {
 	try {
 		const userID = res.locals.jwtPayload["userID"];
-		const isUpdated = await updateUserInfo({
+		const isUpdated = await patchUserInfo_service({
 			User: userModel,
 			userID: userID,
 			updates: req.body.updates,
@@ -147,7 +147,7 @@ const patchUserInfo = async (req: Request, res: Response) => {
 const getDashboardInfo = async (req: Request, res: Response) => {
 	try {
 		const userID = res.locals.jwtPayload["userID"];
-		const assets = await listAssets({ Asset: assetModel, param: { owner: userID } });
+		const assets = await listAssets_service({ Asset: assetModel, param: { owner: userID } });
 		// add services here once the model is done
 		if (assets) {
 			return res.status(200).json({ ownedAsset: assets, rentedAsset: [], requestedAssets: [] });
