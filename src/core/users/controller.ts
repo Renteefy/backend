@@ -54,7 +54,7 @@ const storeLoginDetails = async (req: Request, res: Response) => {
 				});
 			}
 		}
-		const userID = nanoid();
+		const userID = "userID-" + nanoid();
 		const token = JWT.signJWT(userID);
 		req.body.userID = userID;
 		const isUserCreated = await storeLoginDetails_service({

@@ -67,7 +67,7 @@ const storeLoginDetails = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 });
             }
         }
-        const userID = nanoid_1.nanoid();
+        const userID = "userID-" + nanoid_1.nanoid();
         const token = jwt_1.default.signJWT(userID);
         req.body.userID = userID;
         const isUserCreated = yield service_1.storeLoginDetails_service({

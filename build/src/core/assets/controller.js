@@ -28,7 +28,7 @@ const getAllAssets = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.getAllAssets = getAllAssets;
 const addAsset = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const assetID = nanoid_1.nanoid();
+        const assetID = "assetID-" + nanoid_1.nanoid();
         const userID = res.locals.jwtPayload["userID"];
         req.body.assetID = assetID;
         req.body.userID = userID;

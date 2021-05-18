@@ -16,7 +16,7 @@ const getAllAssets = async (req: Request, res: Response) => {
 
 const addAsset = async (req: Request, res: Response) => {
 	try {
-		const assetID = nanoid();
+		const assetID = "assetID-" + nanoid();
 		const userID = res.locals.jwtPayload["userID"];
 		req.body.assetID = assetID;
 		req.body.userID = userID;

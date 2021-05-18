@@ -25,7 +25,7 @@ const addAsset_service = async ({ Asset, reqBody }: { Asset: any; reqBody: any }
 
 const getAsset_service = async ({ Asset, assetID, User }: { Asset: any; assetID: String; User: any }) => {
 	// add code to return user info also
-	const asset = await Asset.findOne({ assetID: assetID });
+	const asset = await Asset.findOne({ where: { assetID: assetID } });
 	if (asset) {
 		const userID = asset["owner"];
 		const userInfo = await getUserInfo_service({ User: User, userID: userID });

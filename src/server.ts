@@ -23,7 +23,7 @@ app.use(morgan("tiny"));
 
 // routers
 app.use("/user", userRouter);
-app.use("/assets", assetRouter);
+app.use("/asset", assetRouter);
 
 // health check
 app.get("/", (req: express.Request, res: express.Response) => res.send("⚡Renteefy server online 🟢"));
