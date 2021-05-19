@@ -49,9 +49,9 @@ describe("app test", () => {
 		expect(res.statusCode).toBe(200);
 		done();
 	});
-	// it("DELETE /asset/deleteAsset", async (done) => {
-	// 	const res = await request.get(`/asset/deleteAsset/${vals["new_assetID"]}`).set({ Authorization: "Bearer " + vals["token"] });
-	// 	expect(res.statusCode).toBe(200);
-	// 	done();
-	// });
+	it("DELETE /asset/deleteAsset", async (done) => {
+		const res = await request.get(`/asset/deleteAsset/${vals["new_assetID"]}`).set({ Authorization: "Bearer " + vals["token"] });
+		expect(res.statusCode).toBe(200);
+		done();
+	});
 });

@@ -35,7 +35,7 @@ const addAsset_service = ({ Asset, reqBody }) => __awaiter(void 0, void 0, void 
 exports.addAsset_service = addAsset_service;
 const getAsset_service = ({ Asset, assetID, User }) => __awaiter(void 0, void 0, void 0, function* () {
     // add code to return user info also
-    const asset = yield Asset.findOne({ assetID: assetID });
+    const asset = yield Asset.findOne({ where: { assetID: assetID } });
     if (asset) {
         const userID = asset["owner"];
         const userInfo = yield service_1.getUserInfo_service({ User: User, userID: userID });

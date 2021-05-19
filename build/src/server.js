@@ -11,6 +11,7 @@ const rotating_file_stream_1 = require("rotating-file-stream");
 // local imports
 const router_1 = require("./core/users/router");
 const router_2 = require("./core/assets/router");
+const router_3 = require("./core/notifications/router");
 const mongodbConnection_1 = require("./utils/mongodbConnection");
 const app = express_1.default();
 app.use(express_1.default.json());
@@ -25,7 +26,8 @@ app.use(morgan_1.default("combined", { stream: accessLogStream }));
 app.use(morgan_1.default("tiny"));
 // routers
 app.use("/user", router_1.userRouter);
-app.use("/assets", router_2.assetRouter);
+app.use("/asset", router_2.assetRouter);
+app.use("/notification", router_3.notificationRouter);
 // health check
 app.get("/", (req, res) => res.send("⚡Renteefy server online 🟢"));
 app.use((req, res, next) => {

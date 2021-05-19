@@ -25,7 +25,7 @@ const addAsset = async (req: Request, res: Response) => {
 		if (new_asset) {
 			return res.status(200).json({ message: "Asset added successfully", assetID: assetID });
 		} else {
-			return res.status(400).json({ message: "Error in insert new record" });
+			return res.status(400).json({ message: "Error in inserting new record" });
 		}
 	} catch (err) {
 		logger.error(err);
