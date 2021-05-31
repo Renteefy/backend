@@ -1,28 +1,11 @@
-import { server } from "./server";
-import { environment } from "./configs/environment";
-import { logger } from "./utils/default.logger";
+import server from "./server";
+import http from "http";
+import environment from "./config/environment";
 
-// TODO: add https to localhost
+const port = environment.PORT;
+const app = http.createServer(server);
+import "reflect-metadata";
 
-switch (environment.nodeEnv) {
-  case "dev":
-    server.listen(environment.port, () => {
-      logger.info("Server Online -- dev");
-    });
-    break;
-  case "staging":
-    server.listen(environment.port, () => {
-      logger.info("Server Online -- staging");
-    });
-    break;
-  case "prod":
-    server.listen(environment.port, () => {
-      logger.info("Server Online -- prod");
-    });
-    break;
-  case "test":
-    server.listen(5000);
-    break;
-  default:
-    logger.info("Env not defined");
-}
+app.listen(port, () => {
+  console.log(`Listening on port : ${port}`);
+});

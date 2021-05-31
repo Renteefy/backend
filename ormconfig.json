@@ -1,0 +1,13 @@
+{
+  "type": "mysql",
+  "host": "localhost",
+  "port": 3306,
+  "username": "bossman",
+  "password": "Bossmanhehe123#",
+  "database": "renteefy_dev",
+  "synchronize": true,
+  "logging": false,
+  "entities": ["dist/model/*.model.js"],
+  "migrations": ["migration/**/*.js"],
+  "subscribers": ["subscriber/**/*.js"]
+}

@@ -1,0 +1,23 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const dotenv_1 = __importDefault(require("dotenv"));
+const morgan_1 = __importDefault(require("morgan"));
+const user_router_1 = __importDefault(require("./core/user/user.router"));
+const asset_router_1 = __importDefault(require("./core/asset/asset.router"));
+const transaction_router_1 = __importDefault(require("./core/transaction/transaction.router"));
+const mongo_connection_1 = require("./config/mongo.connection");
+const mysql_connection_1 = require("./config/mysql.connection");
+dotenv_1.default.config();
+let app = express_1.default();
+app.use(express_1.default.json());
+app.use(morgan_1.default("short"));
+mongo_connection_1.connectMongo();
+mysql_connection_1.connectMysql();
+app.use("/user", user_router_1.default);
+app.use("/asset", asset_router_1.default);
+app.use("/transaction", transaction_router_1.default);
+exports.default = app;
